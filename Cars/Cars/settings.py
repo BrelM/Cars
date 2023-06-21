@@ -37,13 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
-    'visitor.app.VisitorConfig',
-    'user.app.UserConfig',
-=======
-    #'user.apps.UserConfig'
-    #'visitor.apps.VisitorConfig'
->>>>>>> ef587fdcd4360656334974be91614ed473685987
+    'user.apps.UserConfig',
+    'visitor.apps.VisitorConfig'
 ]
 
 MIDDLEWARE = [
