@@ -50,6 +50,18 @@ To deploy this project run you need to:
     pip install pillow
   ```
 
+7- path to manage.py
+
+```bash
+  cd .\Cars\Cars
+```
+
+8- Start the Server
+
+```bash
+  python manage.py runserver
+```
+
 The project is now setup!
 
 ## API Reference
