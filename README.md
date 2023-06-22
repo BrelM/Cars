@@ -13,25 +13,31 @@ To deploy this project run you need to:
   python -m venv mkPlace
 ```
 
-2- now activate Virtual Environment
+2- Enter the Virtual Environment 
 
 ```bash
-  source Script/activate.bat
+  cd .\mkPlace\
+```
+3- now activate Virtual Environment
+
+```bash
+  source Scripts/activate.bat
+  source bin/activate
 ```
 
-3- Install Django in your virtual Environment
+4- Install Django in your virtual Environment
 
 ```bash
   pip install django
 ```
 
-4- clone the git project in your Virtual  Environment
+5- clone the git project in your Virtual  Environment
 
 ```bash
   git clone https://github.com/BrelM/Cars.git
 ```
 
-5- install required dependencies
+6- install required dependencies
 
 - mysqlclient
 
@@ -45,7 +51,29 @@ To deploy this project run you need to:
     pip install pillow
   ```
 
+7- path to manage.py
+
+```bash
+  cd .\Cars\Cars
+```
+
+8- Add CoreHeaders
+
+```bash
+  pip install djangorestframework django-cors-headers
+```
+
+
+9- Start the Server
+
+```bash
+  python manage.py runserver
+```
+
 The project is now setup!
+
+The server is running on 
+`http://127.0.0.1:8000`
 
 ## API Reference
 
