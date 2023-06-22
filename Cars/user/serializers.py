@@ -5,44 +5,44 @@ from visitor.models import *
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'login', 'password')
+        fields = "__all__"
 
 
 
 class CarTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CarType
-        fields = ('type_name', 'nb_seats')
+        fields = "__all__"
 
 
 class BuilderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Builder
-        fields = ('name', 'hq')
+        fields = "__all__"
 
 
 class EngineTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = EngineType
-        fields = ('type_name')
+        fields = "__all__"
 
 
 class CarburantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Carburant
-        fields = ('name')
+        fields = "__all__"
 
 
 class PowerTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PowerType
-        fields = ('type_name')
+        fields = "__all__"
 
 
 class SpeedTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = SpeedType
-        fields = ('type_name')
+        fields = "__all__"
 
 
 

@@ -22,10 +22,10 @@ class UserView(APIView):
     def post(self, request):
         data = request.data
         serializer = UserSerializer(data=data)
-
+        
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse("User Added Successfully", safe=False)
+            return JsonResponse("User Added Successfully", json_dumps_params={"user":serializer}, safe=False)
         return JsonResponse("Failled to add User", safe=False)
     
     def get_user(self, pk):
@@ -61,7 +61,7 @@ class UserView(APIView):
 
 
 
-class VisitorView(APIView):
+class UserAnnouncementView(APIView):
     
     def get_announcement(self, pk):
         try:
@@ -71,7 +71,7 @@ class VisitorView(APIView):
             raise Http404
 
     def get(self, request):
-        
+
         if request.GET.get('pk'):
             data = self.get_announcement(int(request.GET.get('pk')))
             serializer = AnnouncementSerializer(data)
@@ -129,6 +129,14 @@ class VisitorView(APIView):
 
     def put(self, request):
         pass
+
+
+
+
+class MyAnnouncementView(APIView):
+    
+    def get(self, request):
+        data = Announcement.objects.filter(user__id=request.user.id)
     
     
     

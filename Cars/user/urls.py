@@ -4,9 +4,10 @@ from .views import *
 from . import views
 
 urlpatterns = [
-    path('users/', UserView.as_view()),
-    path('users/<int:pk>/', UserView.as_view()),
-    path('', views.VisitorView.as_view()),
+    path('users', UserView.as_view()),
+    path('users/<int:pk>', UserView.as_view()),
+    path('', views.UserAnnouncementView.as_view()),
+    path('me', views.MyAnnouncementView.as_view()),
 
     # Forms elements
     path('cartypes/', CarTypeView.as_view()),

@@ -4,7 +4,7 @@ from .models import *
 
 
 class AnnoucementAdmin(admin.ModelAdmin):
-    list_display = ("car", "price", "description")
+    list_display = ("price", "description", "model", "color", "image", "state", "builder", "car_type", "engine_type", "carburant", "power", "speed", "nb_horses")
 
 
 admin.site.register(CarType)
@@ -13,6 +13,4 @@ admin.site.register(EngineType)
 admin.site.register(Carburant)
 admin.site.register(PowerType)
 admin.site.register(SpeedType)
-admin.site.register(Engine)
-admin.site.register(Car)
 admin.site.register(Announcement, AnnoucementAdmin)
