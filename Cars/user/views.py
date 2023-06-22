@@ -36,3 +36,17 @@ class UserView(APIView):
             data = User.objects.all()
             serializer = UserSerializer(data, many=True)
         return Response(serializer.data)
+    
+    def put(self, request, pk=None):
+        user_to_update = User.objects.get(id=pk)
+        serializer = UserSerializer(instance=user_to_update, data=request.data, partial = True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse("User Updated successfuly", safe=False)
+        return JsonResponse("Failled to Update User")
+    
+    def delete(self, request , pk):
+        user_to_delete = User.objects.get(id=pk)
+        user_to_delete.delete()
+        return JsonResponse("User deleted Successfully", safe=False)
