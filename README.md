@@ -56,13 +56,23 @@ To deploy this project run you need to:
   cd .\Cars\Cars
 ```
 
-8- Start the Server
+8- Add CoreHeaders
+
+```bash
+  pip install djangorestframework django-cors-headers
+```
+
+
+9- Start the Server
 
 ```bash
   python manage.py runserver
 ```
 
 The project is now setup!
+
+The server is running on 
+`http://127.0.0.1:8000`
 
 ## API Reference
 
