@@ -1,0 +1,52 @@
+host = "127.0.0.1:800"
+
+urls:
+    - Read all announcements: GET: host + "visitor" or host + "user"
+    - Read announcements with filters: GET: host + "?param=value"[ + "&param=value"]
+        Possibles params and their base types:
+            * carModel : string. Car's model
+            * color : string. Car's color
+            * state : integer. Car's state. Announcements with a state greater or equal will be returned.
+            * builder : string. Car's builder
+            * type : string. Car's type.
+            * date : date. Date can be passed as a string in the format '%d/%m/%Y'. Announcements posted before that date will be returned.
+            * price : float. Annoucements with a price lesser of equal will be returned.
+            * orderby: string. The ordering criteria. "car__car_model", "car__color", "car__builder__name", "car__car_type", "date", "price"
+
+    - Create an announcement: POST: host + "user"
+        Forms' fields names and theirs types:
+            For the engine
+            * engine_type : text
+            * engine_carburant : text
+            * engine_power_mode : text
+            * engine_speed_mode : text
+            * engine_nb_horses : number (integer)
+            For the car
+            * car_model : text
+            * car_color : text
+            * car_state : number
+            * car_image : file(image)
+            * car_builder : string
+            * car_type : string
+            For the announcement
+            * car_price : number(can be float)
+            * description : text
+
+    - Update an announcement: PUT: host + "user"
+
+    - Delete an announcement: DELETE: host + "user"
+
+
+    - Get engine types: GET: host + "user/enginetypes"
+        fields: type_name
+    - Get car types: GET: host + "user/cartypes"
+        fields: type_name, nb_seats
+    - Get builders: GET: host + "user/builders"
+        fields: name, hq
+    - Get carburants: GET: host + "user/carburants"
+        fields: name
+    - Get power types: GET: host + "user/powertypes"
+        fields: type_name
+    - Get speed types: GET: host + "user/speedtypes"
+        fields: type_name
+
