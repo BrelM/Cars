@@ -5,3 +5,8 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = ('id', 'car', 'date', 'price', "description")
+        
+        
+  
+        
+        

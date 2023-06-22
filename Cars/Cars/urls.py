@@ -22,12 +22,13 @@ from visitor.views import VisitorView
 
 router = routers.DefaultRouter()
 router.register(r'user', UserView, 'user')
-router.register(r'visitor', VisitorView, 'visitor')
+#router.register(r'visitor', VisitorView, 'visitor')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     #path('user/', include("user.urls")),
-    #path('visitor/', include("visitor.urls")),
+    path('visitor/', include("visitor.urls")),
     path('api/', include(router.urls)),
 ]
 

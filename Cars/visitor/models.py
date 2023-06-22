@@ -20,7 +20,7 @@ SPEED = [
 
 
 class CarType(models.Model):
-    typeName = models.CharField(max_length=100, default="New model", primary_key=True)
+    type_name = models.CharField(max_length=100, default="New model", primary_key=True)
     nbSeats = models.IntegerField()
     
     def __str__(self) -> str:
@@ -35,7 +35,7 @@ class Builder(models.Model):
         return "Builder: " + self.name
 
 class EngineType(models.Model):
-    typeName = models.CharField(max_length=200, default="explosion")
+    type_name = models.CharField(max_length=200, default="explosion")
 
     def __str__(self) -> str:
         return "Engine type: " + self.typeName
@@ -47,35 +47,35 @@ class Carburant(models.Model):
         return "Carburant: " + self.name
 
 class PowerType(models.Model):
-    typeName = models.CharField(max_length=200, default=POWERMODE[0], choices=POWERMODE)
+    type_name = models.CharField(max_length=200, default=POWERMODE[0], choices=POWERMODE)
 
     def __str__(self) -> str:
         return "Power: " + self.typeName
 
 class SpeedType(models.Model):
-    typeName = models.CharField(max_length=200, default=SPEED[0], choices=SPEED)
+    type_name = models.CharField(max_length=200, default=SPEED[0], choices=SPEED)
 
     def __str__(self) -> str:
         return "Speed: " + self.typeName
 
 class Engine(models.Model):
-    enginetype = models.ForeignKey(EngineType, on_delete=models.DO_NOTHING)
+    engine_type = models.ForeignKey(EngineType, on_delete=models.DO_NOTHING)
     carburant = models.ForeignKey(Carburant, on_delete=models.DO_NOTHING)
     power = models.ForeignKey(PowerType, on_delete=models.DO_NOTHING)
     speed = models.ForeignKey(SpeedType, on_delete=models.DO_NOTHING)
-    nbHorses = models.IntegerField()
+    nb_horses = models.IntegerField()
 
     def __str__(self) -> str:
         return "Engine"
     
     
 class Car(models.Model):
-    carModel = models.CharField(max_length=200, default="new model")
+    car_model = models.CharField(max_length=200, default="new model")
     color = models.CharField(max_length=100, default="No color provided")
     image = models.ImageField()
     state = models.IntegerField()
     builder = models.ForeignKey(Builder, on_delete=models.DO_NOTHING)
-    type = models.ForeignKey(CarType, on_delete=models.DO_NOTHING)
+    car_type = models.ForeignKey(CarType, on_delete=models.DO_NOTHING)
 
     def __str__(self) -> str:
         return "Car: " + self.builder.name + " " + self.carModel
@@ -88,3 +88,5 @@ class Announcement(models.Model):
 
     def __str__(self) -> str:
         return "Announcement: " + self.car.__str__()
+    
+    
