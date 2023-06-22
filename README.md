@@ -16,7 +16,7 @@ To deploy this project run you need to:
 2- now activate Virtual Environment
 
 ```bash
-  source Script/activate.bat
+  source Scripts/activate.bat
 ```
 
 3- Install Django in your virtual Environment
