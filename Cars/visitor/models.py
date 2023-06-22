@@ -17,11 +17,17 @@ SPEED = [
     ("Variable", "Variable")
 ]
 
+ENGINETYPE = [
+    ("Combustion", "Combustion"),
+    ("Explosion", "Explosino"),
+    ("Electric", "Electric"),
+]
+
 
 
 class CarType(models.Model):
-    type_name = models.CharField(max_length=100, default="New model", primary_key=True)
-    nbSeats = models.IntegerField()
+    type_name = models.CharField(max_length=100, default="Regular", primary_key=True)
+    nb_seats = models.IntegerField()
     
     def __str__(self) -> str:
         return f"Cartype: {self.typeName}"
@@ -35,7 +41,7 @@ class Builder(models.Model):
         return f"Builder: {self.name}"
 
 class EngineType(models.Model):
-    type_name = models.CharField(max_length=200, default="explosion")
+    type_name = models.CharField(max_length=200, default="Explosion", choices=ENGINETYPE)
 
     def __str__(self) -> str:
         return f"Engine type: {self.typeName}"
@@ -76,6 +82,7 @@ class Car(models.Model):
     state = models.IntegerField()
     builder = models.ForeignKey(Builder, on_delete=models.DO_NOTHING)
     car_type = models.ForeignKey(CarType, on_delete=models.DO_NOTHING)
+    engine = models.ForeignKey(Engine, on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self) -> str:
         return f"Car: {self.builder.name} {self.carModel}"
