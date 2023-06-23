@@ -4,8 +4,8 @@ from django.db import models
 # Create your models here.
 class User(models.Model):
     # create fields for names and login
+    login = models.EmailField(unique=True, max_length=200, default="xxx", primary_key=True)
     name = models.CharField(max_length=200, default="xx")
-    login = models.CharField(unique=True, max_length=200, default="xxx", primary_key=True)
     password = models.CharField(max_length=200, default="")
 
     def __str__(self) -> str:

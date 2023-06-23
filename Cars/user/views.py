@@ -1,4 +1,5 @@
 from django.shortcuts import render
+
 from django.http import Http404, HttpResponse, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
@@ -6,6 +7,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from datetime import datetime
+import pickle
 
 from .serializers import *
 from .models import User
@@ -37,32 +39,33 @@ class UserView(APIView):
             return JsonResponse("User Added Successfully", json_dumps_params={"user":serializer}, safe=False)
         return JsonResponse({'error' : "Failled to add User"}, safe=False)
     
-    def get_user(self, pk):
+    def get_user(self, login):
         try:
-            return User.objects.get(id=pk)
+            return User.objects.get(login=login)
         except User.DoesNotExist as e:
             raise Http404 from e
         
-    def get(self, request, pk=None):
-        if pk:
-            data = self.get_user(pk)
+    def get(self, request, login=None):
+        if login:
+            data = self.get_user(login)
             serializer = UserSerializer(data)
         else:
             data = User.objects.all()
             serializer = UserSerializer(data, many=True)
         return Response(serializer.data)
     
-    def put(self, request, pk=None):
-        user_to_update = User.objects.get(id=pk)
-        serializer = UserSerializer(instance=user_to_update, data=request.data, partial = True)
+    
+    def put(self, request, login=None):
+        user_to_update = User.objects.get(login=login)
+        serializer = UserSerializer(instance=user_to_update, data=request.data, partial=True)
         
         if serializer.is_valid():
             serializer.save()
             return JsonResponse("User Updated successfuly", safe=False)
         return JsonResponse({'error' : "Failled to Update User"})
     
-    def delete(self, request , pk):
-        user_to_delete = User.objects.get(id=pk)
+    def delete(self, request, login):
+        user_to_delete = User.objects.get(login=login)
         user_to_delete.delete()
         return JsonResponse("User deleted Successfully", safe=False)
     
@@ -108,28 +111,42 @@ class UserAnnouncementView(APIView):
 
         # Creating an engine
         try:
-            announcement = Announcement.objects.create(
-                user=User.objects.get(login=request.session.get('user_login', "RegX")),
-                engine_type=EngineType.objects.get(type_name=request.data.get('engine_type', ENGINETYPE[0][1])),
-                carburant=Carburant.objects.get(name=request.data.get('engine_carburant', CARBURANT[0][1])),
-                power=PowerType.objects.get(type_name=request.data.get('engine_power_mode', POWERMODE[0][1])),
-                speed=SpeedType.objects.get(type_name=request.data.get('engine_speed_mode', SPEED[0][1])),
-                nb_horses=request.data.get('engine_nb_horses', 0),
-                model=request.data.get('car_model', 'Unknown model'),
-                color=request.data.get('car_color', 'Unknown color'),
-                state=request.data.get('car_state', 0),
-                image=request.data.get('car_image'),
-                builder=Builder.objects.get(name=request.data.get('car_builder', "Toyota")),
-                car_type=CarType.objects.get(type_name=request.data.get('car_type', "Regular")),
-                price=request.data.get('car_price', 0),
-                description=request.data.get('description', "Not description provided."),
-            )
-            return JsonResponse("Announcement Added Successfully", safe=False)
+            with open("user_info.info", "rb") as info:
+                session = pickle.Unpickler(info).load()
+        
+                announcement = Announcement.objects.create(
+                    user=User.objects.get(login=session.get('user_login', "")),
+                    engine_type=EngineType.objects.get(type_name=request.data.get('engine_type', ENGINETYPE[0][1])),
+                    carburant=Carburant.objects.get(name=request.data.get('engine_carburant', CARBURANT[0][1])),
+                    power=PowerType.objects.get(type_name=request.data.get('engine_power_mode', POWERMODE[0][1])),
+                    speed=SpeedType.objects.get(type_name=request.data.get('engine_speed_mode', SPEED[0][1])),
+                    nb_horses=request.data.get('engine_nb_horses', 0),
+                    model=request.data.get('car_model', 'Unknown model'),
+                    color=request.data.get('car_color', 'Unknown color'),
+                    state=request.data.get('car_state', 0),
+                    image=request.data.get('car_image'),
+                    builder=Builder.objects.get(name=request.data.get('car_builder', "Toyota")),
+                    car_type=CarType.objects.get(type_name=request.data.get('car_type', "Regular")),
+                    price=request.data.get('car_price', 0),
+                    description=request.data.get('description', "Not description provided."),
+                )
+                return JsonResponse("Announcement Added Successfully", safe=False)
         except:
             return JsonResponse({'error' : "Failed to add announcement"}, safe=False)
 
     def put(self, request):
-        pass
+        to_update = Announcement.objects.get(id=request.data['id'])
+        serializer = AnnouncementSerializer(instance=to_update, data=request.data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse("Annnouncement Updated successfuly.", safe=False)
+        return JsonResponse({'error' : "Failled to Update Annnouncement."})
+    
+    def delete(self, request):
+        to_delete = Announcement.objects.get(id=request.data.get('id'))
+        to_delete.delete()
+        return JsonResponse("Announcement deleted Successfully", safe=False)
 
 
 
@@ -137,9 +154,12 @@ class UserAnnouncementView(APIView):
 class MyAnnouncementView(APIView):
     
     def get(self, request):
-        data = Announcement.objects.filter(user__id=request.session['user_id'])
-        serializer = AnnouncementSerializer(data, many=True)
-        return Response(serializer.data)
+        with open("user_info.info", "rb") as info:
+            session = pickle.Unpickler(info).load()
+        
+            data = Announcement.objects.filter(user__login=session['user_login'])
+            serializer = AnnouncementSerializer(data, many=True)
+            return Response(serializer.data)
     
     
     
@@ -190,3 +210,8 @@ class SpeedTypeView(APIView):
 
 
 
+def logout(request):
+    with open("user_info.info", "wb") as info:
+        pass
+    
+    return JsonResponse({"message" : "You're currently logged out."}, safe=False)

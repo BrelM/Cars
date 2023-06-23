@@ -96,9 +96,9 @@ DATABASES = {
 }
 '''
 
-DATABASES = {  
-    'default': {  
-        'ENGINE': 'django.db.backends.mysql',  
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ked_bd',
         'USER': 'ked_tp',
         'PASSWORD': 'KED12QWER',
