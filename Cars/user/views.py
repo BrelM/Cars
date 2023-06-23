@@ -100,12 +100,12 @@ class UserAnnouncementView(APIView):
                 data = data.order_by(request.GET.get('orderby'))
             
             serializer = AnnouncementSerializer(data, many=True)
-            
+
         return Response(serializer.data)
-    
+
     def post(self, request):
         data = request.data
-        
+
         # Creating an engine
         try:
             announcement = Announcement.objects.create(
