@@ -63,16 +63,18 @@ class VisitorSearchView(APIView):
 
 @csrf_exempt
 def login(request):
-    user_data = request.GET
-    user = User.objects.get(login=user_data.get('login'), password=user_data.get('password'))
-    
-    if user:
-        request.session['user_id'] = user.id
-        request.session['user_login'] = user.login
-        request.session['user_name'] = user.name
+    if request.method == 'POST':
+        user_data = request.POST
+        user = User.objects.get(login=user_data.get('login'), password=user_data.get('password'))
         
-        return JsonResponse(UserSerializer(user).data)
-    return JsonResponse('Account not found.')
+        if user:
+            request.session['user_id'] = user.id
+            request.session['user_login'] = user.login
+            request.session['user_name'] = user.name
+            
+            return JsonResponse(UserSerializer(user).data)
+        return JsonResponse('Account not found.')
+    return JsonResponse('Bad request.')
     
 
 
