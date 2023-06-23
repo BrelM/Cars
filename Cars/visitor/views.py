@@ -6,12 +6,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
 
-
 from datetime import datetime
-
 
 from .serializers import AnnouncementSerializer
 from .models import *
+
+from user.serializers import UserSerializer
 
 
 
@@ -42,14 +42,15 @@ class VisitorSearchView(APIView):
     def get(self, request):
         #data = filteringSearch(filters)
         data = Announcement.objects.filter(
-            car__car_model__icontains=request.GET.get('carModel', ''),
-            car__color__icontains=request.GET.get('color', ''),
-            car__state__gte=int(request.GET.get('state', 0)),
-            car__builder__name__icontains=request.GET.get('builder', ''),
-            car__car_type__type_name__icontains=request.GET.get('type', ''),
-            date__gte=datetime.strptime(request.GET.get('date', datetime.now().strftime('%d/%m/%Y')), '%d/%m/%Y'),
-            price__lte=float(request.GET.get('price', 0))
+            model__icontains=request.GET.get('carModel', ''),
+            color__icontains=request.GET.get('color', ''),
+            state__gte=int(request.GET.get('state', 0)),
+            builder__name__icontains=request.GET.get('builder', ''),
+            car_type__type_name__icontains=request.GET.get('type', ''),
+            date__lte=datetime.strptime(request.GET.get('date', datetime.now().strftime('%d/%m/%Y')), '%d/%m/%Y'),
+            price__lte=float(request.GET.get('price', 1e120))
             )
+        
         if request.GET.get('orderby'):
             data = data.order_by(request.GET.get('orderby'))
         
@@ -60,6 +61,16 @@ class VisitorSearchView(APIView):
 
 
 
+def login(request):
+    user_data = request.data
+    
+    user = User.objects.get(login=user_data.get('login'), password=user_data.get('password'))
+    
+    if user:
+        request.session['user'] = user
+        return JsonResponse(UserSerializer(user).data)
+    return JsonResponse('Account not found.')
+    
 
 
 

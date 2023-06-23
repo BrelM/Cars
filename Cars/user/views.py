@@ -79,11 +79,11 @@ class UserAnnouncementView(APIView):
             
             #data = filteringSearch(filters)
             data = Announcement.objects.filter(
-                car__car_model__icontains=request.GET.get('carModel', ''),
-                car__color__icontains=request.GET.get('color', ''),
-                car__state__gte=int(request.GET.get('state', 0)),
-                car__builder__name__icontains=request.GET.get('builder', ''),
-                car__car_type__type_name__icontains=request.GET.get('type', ''),
+                model__icontains=request.GET.get('carModel', ''),
+                color__icontains=request.GET.get('color', ''),
+                state__gte=int(request.GET.get('state', 0)),
+                builder__name__icontains=request.GET.get('builder', ''),
+                car_type__type_name__icontains=request.GET.get('type', ''),
                 date__gte=datetime.strptime(request.GET.get('date', datetime.now().strftime('%d/%m/%Y')), '%d/%m/%Y'),
                 price__lte=float(request.GET.get('price', 0))
                 )
@@ -98,30 +98,20 @@ class UserAnnouncementView(APIView):
         data = request.data
         
         # Creating an engine
-        engine = Engine.objects.create(
+        engine = Announcement.objects.create(
             engine_type=EngineType.objects.get(type_name=request.data.get('engine_type', ENGINETYPE[0][1])),
             carburant=Carburant.objects.get(name=request.data.get('engine_carburant', CARBURANT[0][1])),
             power=PowerType.objects.get(type_name=request.data.get('engine_power_mode', POWERMODE[0][1])),
             speed=SpeedType.objects.get(type_name=request.data.get('engine_speed_mode', SPEED[0][1])),
-            nb_horses=request.data.get('engine_nb_horses', 0)
-        )
-        
-        # Creating a car
-        car = Car.objects.create(
-            car_model=request.data.get('car_model', 'Unknown model'),
+            nb_horses=request.data.get('engine_nb_horses', 0),
+            model=request.data.get('car_model', 'Unknown model'),
             color=request.data.get('car_color', 'Unknown color'),
-            state=request.data.get('car_state', 'Unknown state'),
+            state=request.data.get('car_state', 0),
             image=request.data.get('car_image'),
             builder=Builder.objects.get(name=request.data.get('car_builder', "Toyota")),
             car_type=CarType.objects.get(type_name=request.data.get('car_type', "Regular")),
-            engine=engine,
-        )
-        
-        #creating the announcement
-        Announcement.objects.create(
             price=request.data.get('car_price', 0),
             description=request.data.get('description', "Not description provided."),
-            car=car
         )
         
         return JsonResponse("Announcement Added Successfully", safe=False)
@@ -136,8 +126,9 @@ class UserAnnouncementView(APIView):
 class MyAnnouncementView(APIView):
     
     def get(self, request):
-        data = Announcement.objects.filter(user__id=request.user.id)
-    
+        data = Announcement.objects.filter(user__id=request.session['user'].id)
+        serializer = AnnouncementSerializer(data, many=True)
+        return Response(serializer.data)
     
     
     

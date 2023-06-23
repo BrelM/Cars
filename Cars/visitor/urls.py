@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     #path('', views.index, name='index'),
     path('', views.VisitorView.as_view()),
+    path('login', views.login),
     path('search', views.VisitorSearchView.as_view()),
     
     #path('?pk=<int:pk>/', views.VisitorView.as_view()),

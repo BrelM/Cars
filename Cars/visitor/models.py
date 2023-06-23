@@ -22,8 +22,8 @@ SPEED = [
 
 ENGINETYPE = [
     ("Combustion", "Combustion"),
-    ("Explosion", "Explosino"),
-    ("Electric", "Electric"),
+    ("Explosion", "Explosion"),
+    ("Electrique", "Electrique"),
 ]
 
 
@@ -94,4 +94,4 @@ class Announcement(models.Model):
     nb_horses = models.IntegerField(default=0)
     
     def __str__(self) -> str:
-        return f"Announcement: {self.builder.name} {self.car_model}"
+        return f"Announcement: {self.builder.name} {self.model}"

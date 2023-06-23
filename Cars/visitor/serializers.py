@@ -5,8 +5,8 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     #car_image = serializers.ImageField(source='image')
     builder_name = serializers.CharField(source='builder.name')
     car_type_name = serializers.CharField(source='car_type.type_name')
-    engine_type_name = serializers.CharField(source='engine.type.name')
-    carburant_type = serializers.CharField(source='carburant.type_name')
+    engine_type_name = serializers.CharField(source='engine_type.type_name')
+    carburant_type = serializers.CharField(source='carburant.name')
     power_type = serializers.CharField(source='power.type_name')
     speed_type = serializers.CharField(source='speed.type_name')
     

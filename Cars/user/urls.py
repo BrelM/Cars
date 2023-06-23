@@ -1,19 +1,24 @@
 from django.urls import path
 from .views import *
 
-from . import views
+from visitor.views import VisitorSearchView
 
 urlpatterns = [
     path('users', UserView.as_view()),
     path('users/<int:pk>', UserView.as_view()),
-    path('', views.UserAnnouncementView.as_view()),
-    path('me', views.MyAnnouncementView.as_view()),
+    
+    # Create, update, delete class-based view
+    path('', UserAnnouncementView.as_view()),
+    
+    path('search', VisitorSearchView.as_view()),
+
+    path('me', MyAnnouncementView.as_view()),
 
     # Forms elements
     path('cartypes/', CarTypeView.as_view()),
-    path('builers/', BuilderView.as_view()),
+    path('builders/', BuilderView.as_view()),
     path('enginetypes/', EngineTypeView.as_view()),
-    path('caburants/', CarburantView.as_view()),
+    path('carburants/', CarburantView.as_view()),
     path('powertypes/', PowerTypeView.as_view()),
     path('speedtypes/', SpeedTypeView.as_view()),
 
