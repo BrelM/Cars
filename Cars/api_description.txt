@@ -59,3 +59,8 @@ urls:
     - Get speed types: GET: host + "user/speedtypes"
         fields: type_name
 
+
+    - Authenticate user: POST: host + "visitor/login"
+        Forms' fields names and theirs types:
+            * login : text
+            * password : text

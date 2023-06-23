@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 
 from datetime import datetime
+import json
 
 from .serializers import AnnouncementSerializer
 from .models import *
@@ -64,7 +65,7 @@ class VisitorSearchView(APIView):
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
-        user_data = request.POST
+        user_data = json.loads(request.body)
         user = User.objects.get(login=user_data.get('login'), password=user_data.get('password'))
         
         if user:
@@ -73,9 +74,8 @@ def login(request):
             request.session['user_name'] = user.name
             
             return JsonResponse(UserSerializer(user).data)
-        return JsonResponse('Account not found.')
-    return JsonResponse('Bad request.')
-    
+        return JsonResponse('Account not found.', safe=False)
+    return JsonResponse('Bad request.', safe=False)
 
 
 
