@@ -66,15 +66,16 @@ class VisitorSearchView(APIView):
 def login(request):
     if request.method == 'POST':
         user_data = json.loads(request.body)
-        user = User.objects.get(login=user_data.get('login'), password=user_data.get('password'))
+        try:
+            user = User.objects.get(login=user_data.get('login'), password=user_data.get('password'))
+        except User.DoesNotExist:
+            return JsonResponse('Account not found.', safe=False)
+                        
+        request.session['user_id'] = user.id
+        request.session['user_login'] = user.login
+        request.session['user_name'] = user.name
         
-        if user:
-            request.session['user_id'] = user.id
-            request.session['user_login'] = user.login
-            request.session['user_name'] = user.name
-            
-            return JsonResponse(UserSerializer(user).data)
-        return JsonResponse('Account not found.', safe=False)
+        return JsonResponse(UserSerializer(user).data)
     return JsonResponse('Bad request.', safe=False)
 
 
