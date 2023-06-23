@@ -64,7 +64,6 @@ class VisitorSearchView(APIView):
 @csrf_exempt
 def login(request):
     user_data = request.GET
-    print(user_data.get('login'), user_data.get('password'))
     user = User.objects.get(login=user_data.get('login'), password=user_data.get('password'))
     
     if user:
