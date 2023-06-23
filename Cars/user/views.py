@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponse, JsonResponse
 from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer
 from rest_framework import viewsets
 from rest_framework.response import Response
 
@@ -107,7 +108,8 @@ class UserAnnouncementView(APIView):
         
         # Creating an engine
         try:
-            engine = Announcement.objects.create(
+            announcement = Announcement.objects.create(
+                user=User.objects.get(login=request.session.get('user_login', "RegX")),
                 engine_type=EngineType.objects.get(type_name=request.data.get('engine_type', ENGINETYPE[0][1])),
                 carburant=Carburant.objects.get(name=request.data.get('engine_carburant', CARBURANT[0][1])),
                 power=PowerType.objects.get(type_name=request.data.get('engine_power_mode', POWERMODE[0][1])),
@@ -123,7 +125,7 @@ class UserAnnouncementView(APIView):
                 description=request.data.get('description', "Not description provided."),
             )
             return JsonResponse("Announcement Added Successfully", safe=False)
-        except:        
+        except:
             return JsonResponse({'error' : "Failed to add announcement"}, safe=False)
 
     def put(self, request):

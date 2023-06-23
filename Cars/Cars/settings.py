@@ -174,6 +174,15 @@ CORS_ALLOW_METHODS = (
     "PUT",
 )
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+}
+
+
 '''
 CORS_ALLOWED_ORIGINS = [
     "http://192.168.1.152:8000",

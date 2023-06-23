@@ -5,7 +5,7 @@ from django.db import models
 class User(models.Model):
     # create fields for names and login
     name = models.CharField(max_length=200, default="xx")
-    login = models.CharField(unique=True, max_length=200, default="xxx")
+    login = models.CharField(unique=True, max_length=200, default="xxx", primary_key=True)
     password = models.CharField(max_length=200, default="")
 
     def __str__(self) -> str:

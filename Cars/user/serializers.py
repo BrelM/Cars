@@ -1,4 +1,6 @@
+from rest_framework import renderers
 from rest_framework import serializers
+
 from .models import User
 from visitor.models import *
 
@@ -43,6 +45,17 @@ class SpeedTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = SpeedType
         fields = "__all__"
+
+
+
+class JPEGRenderer(renderers.BaseRenderer):
+    media_type = 'image/jpeg'
+    format = 'jpg'
+    charset = None
+    render_style = 'binary'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data
 
 
 
