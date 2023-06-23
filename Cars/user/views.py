@@ -126,7 +126,7 @@ class UserAnnouncementView(APIView):
 class MyAnnouncementView(APIView):
     
     def get(self, request):
-        data = Announcement.objects.filter(user__id=request.session['user'].id)
+        data = Announcement.objects.filter(user__id=request.session['user_id'])
         serializer = AnnouncementSerializer(data, many=True)
         return Response(serializer.data)
     

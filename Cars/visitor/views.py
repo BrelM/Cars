@@ -1,6 +1,7 @@
 from django.http.response import Http404
 from django.db import models
 from django.http.response import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -60,14 +61,17 @@ class VisitorSearchView(APIView):
 
 
 
-
+@csrf_exempt
 def login(request):
-    user_data = request.data
-    
+    user_data = request.GET
+    print(user_data.get('login'), user_data.get('password'))
     user = User.objects.get(login=user_data.get('login'), password=user_data.get('password'))
     
     if user:
-        request.session['user'] = user
+        request.session['user_id'] = user.id
+        request.session['user_login'] = user.login
+        request.session['user_name'] = user.name
+        
         return JsonResponse(UserSerializer(user).data)
     return JsonResponse('Account not found.')
     
