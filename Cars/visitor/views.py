@@ -55,7 +55,7 @@ class VisitorSearchView(APIView):
             car_type__type_name__icontains=filters.get('type', ''),
             power__type_name__icontains=filters.get('power', ''),
             speed__type_name__icontains=filters.get('speed', ''),
-            carburant__type_name__icontains=filters.get('carburant', ''),
+            carburant__name__icontains=filters.get('carburant', ''),
             date__gte=datetime.strptime(filters.get('date', datetime.now().strftime('%d/%m/%Y')), '%d/%m/%Y'),
             price__lte=float(filters.get('price', 1e120))
         )
