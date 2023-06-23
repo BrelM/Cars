@@ -25,7 +25,7 @@ class UserView(APIView):
         try:
             user = User.objects.get(login=data.get('login'))
             if user:
-                return JsonResponse('Login already taken.', safe=False)
+                return JsonResponse({'error' : 'Login already taken.'}, safe=False)
             
         except User.DoesNotExist:
             pass
@@ -34,7 +34,7 @@ class UserView(APIView):
         if serializer.is_valid():
             serializer.save()
             return JsonResponse("User Added Successfully", json_dumps_params={"user":serializer}, safe=False)
-        return JsonResponse("Failled to add User", safe=False)
+        return JsonResponse({'error' : "Failled to add User"}, safe=False)
     
     def get_user(self, pk):
         try:
@@ -58,7 +58,7 @@ class UserView(APIView):
         if serializer.is_valid():
             serializer.save()
             return JsonResponse("User Updated successfuly", safe=False)
-        return JsonResponse("Failled to Update User")
+        return JsonResponse({'error' : "Failled to Update User"})
     
     def delete(self, request , pk):
         user_to_delete = User.objects.get(id=pk)
@@ -106,24 +106,25 @@ class UserAnnouncementView(APIView):
         data = request.data
         
         # Creating an engine
-        engine = Announcement.objects.create(
-            engine_type=EngineType.objects.get(type_name=request.data.get('engine_type', ENGINETYPE[0][1])),
-            carburant=Carburant.objects.get(name=request.data.get('engine_carburant', CARBURANT[0][1])),
-            power=PowerType.objects.get(type_name=request.data.get('engine_power_mode', POWERMODE[0][1])),
-            speed=SpeedType.objects.get(type_name=request.data.get('engine_speed_mode', SPEED[0][1])),
-            nb_horses=request.data.get('engine_nb_horses', 0),
-            model=request.data.get('car_model', 'Unknown model'),
-            color=request.data.get('car_color', 'Unknown color'),
-            state=request.data.get('car_state', 0),
-            image=request.data.get('car_image'),
-            builder=Builder.objects.get(name=request.data.get('car_builder', "Toyota")),
-            car_type=CarType.objects.get(type_name=request.data.get('car_type', "Regular")),
-            price=request.data.get('car_price', 0),
-            description=request.data.get('description', "Not description provided."),
-        )
-        
-        return JsonResponse("Announcement Added Successfully", safe=False)
-        #return JsonResponse("Failed to add announcement", safe=False)
+        try:
+            engine = Announcement.objects.create(
+                engine_type=EngineType.objects.get(type_name=request.data.get('engine_type', ENGINETYPE[0][1])),
+                carburant=Carburant.objects.get(name=request.data.get('engine_carburant', CARBURANT[0][1])),
+                power=PowerType.objects.get(type_name=request.data.get('engine_power_mode', POWERMODE[0][1])),
+                speed=SpeedType.objects.get(type_name=request.data.get('engine_speed_mode', SPEED[0][1])),
+                nb_horses=request.data.get('engine_nb_horses', 0),
+                model=request.data.get('car_model', 'Unknown model'),
+                color=request.data.get('car_color', 'Unknown color'),
+                state=request.data.get('car_state', 0),
+                image=request.data.get('car_image'),
+                builder=Builder.objects.get(name=request.data.get('car_builder', "Toyota")),
+                car_type=CarType.objects.get(type_name=request.data.get('car_type', "Regular")),
+                price=request.data.get('car_price', 0),
+                description=request.data.get('description', "Not description provided."),
+            )
+            return JsonResponse("Announcement Added Successfully", safe=False)
+        except:        
+            return JsonResponse({'error' : "Failed to add announcement"}, safe=False)
 
     def put(self, request):
         pass
