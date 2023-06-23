@@ -22,7 +22,15 @@ class UserView(APIView):
     def post(self, request):
         data = request.data
         serializer = UserSerializer(data=data)
+        try:
+            user = User.objects.get(login=data.get('login'))
+            if user:
+                return JsonResponse('Login already taken.', safe=False)
+            
+        except User.DoesNotExist:
+            pass
         
+                        
         if serializer.is_valid():
             serializer.save()
             return JsonResponse("User Added Successfully", json_dumps_params={"user":serializer}, safe=False)
