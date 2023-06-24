@@ -4,7 +4,7 @@ from .views import *
 from visitor.views import *
 
 urlpatterns = [
-    path('users', UserView.as_view()),
+    path('users/', UserView.as_view()),
     path('users/<str:login>/', UserView.as_view()),
     
     path('logout/', logout),

@@ -36,7 +36,7 @@ class UserView(APIView):
                         
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse("User Added Successfully", json_dumps_params={"user":serializer}, safe=False)
+            return JsonResponse({"user":serializer}, safe=False)
         return JsonResponse({'error' : "Failled to add User"}, safe=False)
     
     def get_user(self, login):
