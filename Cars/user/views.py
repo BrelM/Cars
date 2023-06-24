@@ -131,7 +131,7 @@ class UserAnnouncementView(APIView):
                     description=request.data.get('description', "Not description provided."),
                 )
                 return JsonResponse("Announcement Added Successfully", safe=False)
-        #except:
+        except:
             return JsonResponse({'error' : "Failed to add announcement"}, safe=False)
 
     def put(self, request, id):
