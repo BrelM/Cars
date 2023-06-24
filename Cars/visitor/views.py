@@ -46,18 +46,18 @@ class VisitorView(APIView):
 class VisitorSearchView(APIView):
     def post(self, request):
         filters = json.loads(request.body)
-        
+        print(filters)
         data = Announcement.objects.filter(
-            Q(model__icontains=filters.get('carModel', '')) | Q(model__contains=filters.get('keyword', '')),
-            Q(builder__name__icontains=filters.get('builder', '')) | Q(builder__name__icontains=filters.get('keyword', '')),
-            Q(color__icontains=filters.get('color', '')) | Q(color__icontains=filters.get('keyword', '')),
-            state__gte=int(filters.get('state', 0)),
-            car_type__type_name__icontains=filters.get('type', ''),
-            power__type_name__icontains=filters.get('power', ''),
-            speed__type_name__icontains=filters.get('speed', ''),
-            carburant__name__icontains=filters.get('carburant', ''),
-            date__gte=datetime.strptime(filters.get('date', datetime.now().strftime('%d/%m/%Y')), '%d/%m/%Y'),
-            price__lte=float(filters.get('price', 1e120))
+            Q(Q(model__icontains=filters.get('carModel', '').lower()) | Q(model__contains=filters.get('keyword', '').lower())) &
+            Q(Q(builder__name__icontains=filters.get('builder', '').lower()) | Q(builder__name__icontains=filters.get('keyword', '').lower())) &
+            Q(Q(color__icontains=filters.get('color', '').lower()) | Q(color__icontains=filters.get('keyword', '').lower())) &
+            Q(state__gte=int(filters.get('state', 0))) &
+            Q(car_type__type_name__icontains=filters.get('type', '')) &
+            Q(power__type_name__icontains=filters.get('power', '')) &
+            Q(speed__type_name__icontains=filters.get('speed', '')) &
+            Q(carburant__name__icontains=filters.get('carburant', '')) &
+            Q(date__gte=datetime.strptime(filters.get('date', datetime(199, 1, 1).strftime('%d/%m/%Y')), '%d/%m/%Y')) &
+            Q(price__lte=float(filters.get('price', 1e120)))
         )
         
         if request.GET.get('orderby'):
@@ -77,6 +77,7 @@ def login(request):
             user = User.objects.get(login=user_data.get('login'), password=user_data.get('password'))
         except User.DoesNotExist:
             return JsonResponse('Account not found.', safe=False)
+        request.session['user_login'] = user.login
         
         session = {'user_login' : user.login, 'user_password': user.password}
         with open("user_info.info", "wb") as info:

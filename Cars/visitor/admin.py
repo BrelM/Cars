@@ -4,7 +4,7 @@ from .models import *
 
 
 class AnnoucementAdmin(admin.ModelAdmin):
-    list_display = ("price", "description", "model", "color", "image", "state", "builder", "car_type", "engine_type", "carburant", "power", "speed", "nb_horses")
+    list_display = ("user", "date", "price", "description", "model", "color", "image", "state", "builder", "car_type", "engine_type", "carburant", "power", "speed", "nb_horses")
 
 
 admin.site.register(CarType)

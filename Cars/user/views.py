@@ -113,7 +113,7 @@ class UserAnnouncementView(APIView):
         try:
             with open("user_info.info", "rb") as info:
                 session = pickle.Unpickler(info).load()
-        
+
                 announcement = Announcement.objects.create(
                     user=User.objects.get(login=session.get('user_login', "")),
                     engine_type=EngineType.objects.get(type_name=request.data.get('engine_type', ENGINETYPE[0][1])),
@@ -134,17 +134,31 @@ class UserAnnouncementView(APIView):
         except:
             return JsonResponse({'error' : "Failed to add announcement"}, safe=False)
 
-    def put(self, request):
-        to_update = Announcement.objects.get(id=request.data['id'])
-        serializer = AnnouncementSerializer(instance=to_update, data=request.data, partial=True)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse("Annnouncement Updated successfuly.", safe=False)
-        return JsonResponse({'error' : "Failled to Update Annnouncement."})
+    def put(self, request, id):
+        to_update = Announcement.objects.get(id=id)
+
+        #try:
+        to_update.engine_type=EngineType.objects.get(type_name=request.data.get('engine_type', to_update.engine_type.type_name))
+        to_update.carburant=Carburant.objects.get(name=request.data.get('engine_carburant', to_update.carburant.name))
+        to_update.power=PowerType.objects.get(type_name=request.data.get('engine_power_mode', to_update.power.type_name))
+        to_update.speed=SpeedType.objects.get(type_name=request.data.get('engine_speed_mode', to_update.speed.type_name))
+        to_update.nb_horses=request.data.get('engine_nb_horses', to_update.nb_horses)
+        to_update.model=request.data.get('car_model', to_update.model)
+        to_update.color=request.data.get('car_color', to_update.color)
+        to_update.state=request.data.get('car_state', to_update.state)
+        to_update.image=request.data.get('car_image', to_update.image)
+        to_update.builder=Builder.objects.get(name=request.data.get('car_builder', to_update.builder.name))
+        to_update.car_type=CarType.objects.get(type_name=request.data.get('car_type', to_update.car_type.type_name))
+        to_update.price=request.data.get('car_price', to_update.price)
+        to_update.description=request.data.get('description', to_update.description)        
+
+        to_update.save()
+        return JsonResponse("Annnouncement Updated successfuly.", safe=False)
+        #except:
+        #return JsonResponse({'error' : "Failled to Update Annnouncement."})
     
-    def delete(self, request):
-        to_delete = Announcement.objects.get(id=request.data.get('id'))
+    def delete(self, request, id):
+        to_delete = Announcement.objects.get(id=id)
         to_delete.delete()
         return JsonResponse("Announcement deleted Successfully", safe=False)
 
