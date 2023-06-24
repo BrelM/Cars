@@ -48,15 +48,16 @@ class VisitorSearchView(APIView):
         filters = json.loads(request.body)
         print(filters)
         data = Announcement.objects.filter(
-            Q(Q(model__icontains=filters.get('carModel', '').lower()) & Q(model__contains=filters.get('keyword', '').lower())) &
-            Q(Q(builder__name__icontains=filters.get('builder', '').lower()) & Q(builder__name__icontains=filters.get('keyword', '').lower())) &
-            Q(Q(color__icontains=filters.get('color', '').lower()) & Q(color__icontains=filters.get('keyword', '').lower())) &
+            Q(Q(model__contains=filters.get('keyword', '').lower()) | Q(builder__name__icontains=filters.get('keyword', '').lower()) | Q(color__icontains=filters.get('keyword', '').lower())) &
+            Q(model__icontains=filters.get('carModel', '').lower()) &
+            Q(builder__name__icontains=filters.get('builder', '').lower()) &
+            Q(color__icontains=filters.get('color', '').lower()) &
             Q(state__gte=int(filters.get('state', 0))) &
             Q(car_type__type_name__icontains=filters.get('type', '')) &
             Q(power__type_name__icontains=filters.get('power', '')) &
             Q(speed__type_name__icontains=filters.get('speed', '')) &
             Q(carburant__name__icontains=filters.get('carburant', '')) &
-            Q(date=datetime.strptime(filters.get('date', datetime(199, 1, 1).strftime('%Y-%m-%d')), '%Y-%m-%d')) &
+            Q(date__gte=datetime.strptime(filters.get('date', datetime(1999, 1, 1).strftime('%Y-%m-%d')), '%Y-%m-%d')) &
             Q(price__lte=float(filters.get('price', 1e120)))
         )
         
