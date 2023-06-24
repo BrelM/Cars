@@ -115,7 +115,7 @@ class UserAnnouncementView(APIView):
                 session = pickle.Unpickler(info).load()
 
                 announcement = Announcement.objects.create(
-                    user=User.objects.get(login=session.get('user_login', "")),
+                    user=User.objects.get(login=session.get('user_login', '')),
                     engine_type=EngineType.objects.get(type_name=request.data.get('engine_type', ENGINETYPE[0][1])),
                     carburant=Carburant.objects.get(name=request.data.get('engine_carburant', CARBURANT[0][1])),
                     power=PowerType.objects.get(type_name=request.data.get('engine_power_mode', POWERMODE[0][1])),
@@ -131,7 +131,7 @@ class UserAnnouncementView(APIView):
                     description=request.data.get('description', "Not description provided."),
                 )
                 return JsonResponse("Announcement Added Successfully", safe=False)
-        except:
+        #except:
             return JsonResponse({'error' : "Failed to add announcement"}, safe=False)
 
     def put(self, request, id):
